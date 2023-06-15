@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const DifficultyCounter: React.FC = () => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(1)
 
   const handleIncrement = () => {
     if (count < 3) {
@@ -18,11 +19,17 @@ const DifficultyCounter: React.FC = () => {
 
   return (
     <div>
-      <p>Count: {count}</p>
+      <p>Difficulty Level: {count}
       <button onClick={handleIncrement}>↑</button>
-      <br></br>
       <button onClick={handleDecrement}>↓</button>
+      </p>
+      <br></br>
+      <Link to={`/gamepage/${count}`}>
+      <button>Start Game</button>
+      </Link>
     </div>
+
+    
   )
 }
 

@@ -1,11 +1,12 @@
-import PlayGameButton from './PlayGameButton'
 import DifficultyCounter from './DifficultyCounter'
 
 export default function Homepage() {
+  
+
+
   return (
     <div>
       <div>
-        <PlayGameButton />
         <DifficultyCounter />
       </div>
       <header className="header">
