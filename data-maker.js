@@ -1708,6 +1708,13 @@ const data = [
   },
 ]
 
+// const objects = words.map((word, i) => ({
+//   id: i + 273,
+//   wordArray: [...word.toLowerCase()],
+//   word: word.toLowerCase(),
+//   difficulty: 3,
+// }))
+
 function removeArray(data) {
   return data.map((el, i) => {
     el.id = i + 1
