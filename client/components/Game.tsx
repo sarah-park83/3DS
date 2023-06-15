@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 
 function Game() {
-  const maxTime = 120
-  const word = 'hello'
-  const tries = 3
+  const [maxTime, setMaxTime] = useState(120)
+  let word = 'hello'
+  let tries = 3
   const [foundLetters, setFoundLetters] = useState([] as string[])
   const [timeLeft, setTimeLeft] = useState(maxTime)
   const [completed, setCompleted] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [triesLeft, setTriesLeft] = useState(tries)
+  const [triesLeft, setTriesLeft] = useState(Math.max(tries, word.length))
   const intervalRef = useRef<NodeJS.Timer>()
+  const alphabetButtons = useRef<HTMLDivElement>(null)
 
   const letters = [
     'A',
@@ -39,6 +40,27 @@ function Game() {
     'Y',
     'Z',
   ]
+
+  const resetState = () => {
+    word = 'hello'
+    tries = 3
+    setMaxTime(120)
+    setFoundLetters([])
+    setTimeLeft(maxTime)
+    setCompleted(false)
+    setSuccess(false)
+    setTriesLeft(Math.max(tries, word.length))
+    enableAllLetterButtons()
+  }
+
+  function enableAllLetterButtons() {
+    const parentDiv = alphabetButtons.current
+    if (parentDiv) {
+      for (const child of parentDiv.children) {
+        child.disabled = false
+      }
+    }
+  }
 
   function showEndMessage() {
     if (foundAllLetters()) {
@@ -72,7 +94,7 @@ function Game() {
       setTimeLeft((t) => t - 1)
     }, 1000)
     return () => clearInterval(intervalRef.current)
-  }, [])
+  }, [maxTime])
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -90,7 +112,16 @@ function Game() {
 
   return (
     <>
-      <div className="space-x-1">
+      <div>
+        {word.split('').map((letter, index) => {
+          return (
+            <div key={index}>
+              {foundLetters.includes(letter.toUpperCase()) ? letter : '___'}
+            </div>
+          )
+        })}
+      </div>
+      <div ref={alphabetButtons} className="space-x-1">
         {letters.map((letter) => {
           return (
             <button
@@ -103,19 +134,11 @@ function Game() {
           )
         })}
       </div>
-      <div>
-        {word.split('').map((letter, index) => {
-          return (
-            <div key={index}>
-              {foundLetters.includes(letter.toUpperCase()) ? letter : '___'}
-            </div>
-          )
-        })}
-      </div>
       <div>{timeLeft}</div>
       <div>Tries left: {triesLeft}</div>
       {completed && success && <div>Congratulations! You won!</div>}
       {completed && !success && <div>Too bad! Next time!</div>}
+      {completed && <button onClick={resetState}>Play Again</button>}
     </>
   )
 }
