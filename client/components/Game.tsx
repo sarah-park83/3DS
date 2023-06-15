@@ -112,7 +112,7 @@ function Game() {
 
   return (
     <>
-      <div>
+      <div className="letters">
         {word.split('').map((letter, index) => {
           return (
             <div key={index}>
@@ -124,16 +124,16 @@ function Game() {
       <div ref={alphabetButtons} className="space-x-1">
         {letters.map((letter) => {
           return (
-            <button
+            <button 
+              className="letterbutton"
               key={letter}
               onClick={handleClick}
-              className="border rounded-sm w-6 hover:bg-slate-600 hover:text-white disabled:opacity-50 disabled:bg-slate-800"
             >
               {letter}
             </button>
           )
         })}
-      </div>
+      </div>  
       <div>{timeLeft}</div>
       <div>Tries left: {triesLeft}</div>
       {completed && success && <div>Congratulations! You won!</div>}
