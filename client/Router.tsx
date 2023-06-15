@@ -5,13 +5,13 @@ import {
 } from 'react-router-dom'
 
 import App from './components/App'
-import PlayGameButton from './components/PlayGameButton'
+import Homepage from './components/Homepage'
+// import PlayGameButton from './components/PlayGameButton'
 
-export const Router = createBrowserRouter(
+export const router = createBrowserRouter(
   createRoutesFromElements(
-    <>
-      <Route path="/" element={<PlayGameButton />} />
-      <Route path="game" element={<App />} />
-    </>
+    <Route path="/" element={<App />}>
+      <Route index element={<Homepage />} />
+    </Route>
   )
 )

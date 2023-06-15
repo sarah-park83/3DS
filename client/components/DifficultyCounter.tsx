@@ -4,7 +4,9 @@ const DifficultyCounter: React.FC = () => {
   const [count, setCount] = useState(0)
 
   const handleIncrement = () => {
-    setCount(count + 1)
+    if (count < 3) {
+      setCount(count + 1)
+    }
   }
 
   const handleDecrement = () => {
