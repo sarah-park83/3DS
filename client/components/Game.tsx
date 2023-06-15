@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 
 function Game() {
-  const maxTime = 5
+  const maxTime = 120
   const word = 'hello'
-  const tries = 10
+  const tries = 3
   const [foundLetters, setFoundLetters] = useState([] as string[])
   const [timeLeft, setTimeLeft] = useState(maxTime)
   const [completed, setCompleted] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [triesLeft, setTriesLeft] = useState(tries)
   const intervalRef = useRef<NodeJS.Timer>()
 
   const letters = [
@@ -50,8 +51,6 @@ function Game() {
 
   function foundAllLetters() {
     const arrayLength = [...new Set(word.split(''))].length
-    console.log('word length', foundLetters.length)
-    console.log('correct length', arrayLength)
     return foundLetters.length === arrayLength
   }
 
@@ -62,6 +61,7 @@ function Game() {
   function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const button = event.target as HTMLButtonElement
     const buttonValue = button.innerHTML
+    if (!button.disabled) setTriesLeft(triesLeft - 1)
     button.disabled = true
     if (inWord(buttonValue)) setFoundLetters([...foundLetters, buttonValue])
     if (foundAllLetters()) setCompleted(true)
@@ -80,6 +80,13 @@ function Game() {
       showEndMessage()
     }
   }, [timeLeft])
+
+  useEffect(() => {
+    if (triesLeft <= 0) {
+      clearInterval(intervalRef.current)
+      showEndMessage()
+    }
+  }, [triesLeft])
 
   return (
     <>
@@ -106,6 +113,7 @@ function Game() {
         })}
       </div>
       <div>{timeLeft}</div>
+      <div>Tries left: {triesLeft}</div>
       {completed && success && <div>Congratulations! You won!</div>}
       {completed && !success && <div>Too bad! Next time!</div>}
     </>
