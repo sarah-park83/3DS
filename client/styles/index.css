@@ -9,6 +9,10 @@ body {
   text-align: center;
 }
 
+.hangman{
+  display: flex;
+}
+
 .header{  
   font-family: Trattatello, fantasy;
   text-align: center;
