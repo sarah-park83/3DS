@@ -6,7 +6,7 @@ import {
 
 import App from './components/App'
 import Homepage from './components/Homepage'
-import Game from './components/Game' // Import the Gamepage component
+import Game from './components/Game'
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
