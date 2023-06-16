@@ -12,7 +12,7 @@ function Game() {
   const [completed, setCompleted] = useState(false)
   const [success, setSuccess] = useState(false)
   const [triesLeft, setTriesLeft] = useState(Math.max(tries, word.length))
-  const [catSize, setCatSize] = useState(80 / triesLeft)
+  const [catSize, setCatSize] = useState(80 / (triesLeft + 1))
   const intervalRef = useRef<NodeJS.Timer>()
   const alphabetButtons = useRef<HTMLDivElement>(null)
 
@@ -53,7 +53,7 @@ function Game() {
     setSuccess(false)
     setTriesLeft(5)
     enableAllLetterButtons()
-    setCatSize(80 / triesLeft)
+    setCatSize(80 / (triesLeft + 1))
   }
 
   function enableAllLetterButtons() {
@@ -82,7 +82,7 @@ function Game() {
     //Check that button is not disabled and that the letter isn't in the word
     if (!button.disabled && !word.split('').includes(buttonValue)) {
       setTriesLeft(triesLeft - 1)
-      setCatSize(80 / triesLeft)
+      setCatSize(80 / (triesLeft + 1))
     }
     //Make it so the button can't be pushed again
     button.disabled = true
@@ -135,11 +135,11 @@ function Game() {
   return (
     <>
       {!completed && (
-        <div className="letters">
+        <div className="hangman">
           {word.split('').map((letter: string, index: number) => {
             return (
               <div key={index}>
-                {foundLetters.includes(letter.toLowerCase()) ? letter : '___'}
+                {foundLetters.includes(letter.toLowerCase()) ? letter : '___ '}
               </div>
             )
           })}
@@ -152,7 +152,7 @@ function Game() {
               <button
                 key={letter}
                 onClick={handleClick}
-                className="letterbutton"
+                className="border rounded-sm w-6 hover:bg-slate-600 hover:text-white disabled:opacity-50 disabled:bg-slate-800"
               >
                 {letter}
               </button>
