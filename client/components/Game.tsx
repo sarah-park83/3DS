@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom'
 import { getWordByDifficultyLevel } from '../apis/apiClient'
 
 function Game() {
-  const { difficulty } = useParams()
+  const tries = 5
+  const { difficulty } = useParams<{ difficulty: string }>()
   const [word, setWord] = useState('')
   const [maxTime, setMaxTime] = useState(120)
-  let tries = 20
   const [foundLetters, setFoundLetters] = useState([] as string[])
   const [timeLeft, setTimeLeft] = useState(maxTime)
   const [completed, setCompleted] = useState(false)
   const [success, setSuccess] = useState(false)
   const [triesLeft, setTriesLeft] = useState(Math.max(tries, word.length))
+  const [catSize, setCatSize] = useState(80 / triesLeft)
   const intervalRef = useRef<NodeJS.Timer>()
   const alphabetButtons = useRef<HTMLDivElement>(null)
 
@@ -45,14 +46,14 @@ function Game() {
   ]
 
   const resetState = () => {
-    tries = 3
     setMaxTime(120)
     setFoundLetters([])
     setTimeLeft(maxTime)
     setCompleted(false)
     setSuccess(false)
-    setTriesLeft(Math.max(tries, word.length))
+    setTriesLeft(5)
     enableAllLetterButtons()
+    setCatSize(80 / triesLeft)
   }
 
   function enableAllLetterButtons() {
@@ -64,23 +65,11 @@ function Game() {
     }
   }
 
-  function showEndMessage() {
-    if (foundAllLetters()) {
-      console.log('here')
+  function showEndMessage(hasFound = false) {
+    if (hasFound) {
       setSuccess(true)
     }
-    console.log('completed')
     setCompleted(true)
-  }
-
-  function foundAllLetters(newArray: string[]) {
-    const array = [...new Set(word.split(''))]
-    const arrayLength = array.length
-    // console.log(arrayLength)
-    // console.log(foundLetters.length)
-    // console.log(array)
-    console.log(newArray)
-    return newArray.length === arrayLength
   }
 
   function inWord(letter: string) {
@@ -90,35 +79,37 @@ function Game() {
   function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const button = event.target as HTMLButtonElement
     const buttonValue = button.innerHTML
+    //Check that button is not disabled and that the letter isn't in the word
     if (!button.disabled && !word.split('').includes(buttonValue)) {
       setTriesLeft(triesLeft - 1)
+      setCatSize(80 / triesLeft)
     }
+    //Make it so the button can't be pushed again
     button.disabled = true
-    if (inWord(buttonValue)) setFoundLetters([...foundLetters, buttonValue])
-    if (foundAllLetters([...foundLetters, buttonValue])) showEndMessage()
-    console.log('foundLetters', foundLetters)
+    //update the foundLetters array
+    const newArray = [...foundLetters, buttonValue]
+    if (inWord(buttonValue)) setFoundLetters(newArray)
+    //Check to see if all the letters have been found
+    if ([...new Set(word.split(''))].length === newArray.length)
+      showEndMessage(true)
   }
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setTimeLeft((t) => t - 1)
     }, 1000)
+    if (triesLeft <= 0 || completed) {
+      console.log('2')
+      showEndMessage()
+      clearInterval(intervalRef.current)
+    }
+    if (timeLeft <= 0 || completed) {
+      console.log('1')
+      showEndMessage()
+      clearInterval(intervalRef.current)
+    }
     return () => clearInterval(intervalRef.current)
-  }, [maxTime])
-
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      clearInterval(intervalRef.current)
-      showEndMessage()
-    }
   }, [timeLeft])
-
-  useEffect(() => {
-    if (triesLeft <= 0) {
-      clearInterval(intervalRef.current)
-      showEndMessage()
-    }
-  }, [triesLeft])
 
   useEffect(() => {
     async function fetchWord() {
@@ -127,37 +118,54 @@ function Game() {
       setWord(wordResponse.body.word)
     }
     fetchWord()
-  }, [])
+  }, [completed])
+
+  const catStyle: React.CSSProperties = {
+    position: 'fixed',
+    bottom: '0',
+    left: '0',
+    width: `${catSize}vw`,
+    height: `${catSize}vh`,
+    zIndex: -1,
+    transition: 'width 0.5s, height 0.5s',
+    background: 'url(/cat.png)',
+    backgroundSize: 'cover',
+  }
 
   return (
     <>
-      <div>
-        {word.split('').map((letter: string, index: number) => {
-          return (
-            <div key={index}>
-              {foundLetters.includes(letter.toLowerCase()) ? letter : '___'}
-            </div>
-          )
-        })}
-      </div>
-      <div ref={alphabetButtons} className="space-x-1">
-        {letters.map((letter) => {
-          return (
-            <button
-              key={letter}
-              onClick={handleClick}
-              className="border rounded-sm w-6 hover:bg-slate-600 hover:text-white disabled:opacity-50 disabled:bg-slate-800"
-            >
-              {letter}
-            </button>
-          )
-        })}
-      </div>
+      {!completed && (
+        <div>
+          {word.split('').map((letter: string, index: number) => {
+            return (
+              <div key={index}>
+                {foundLetters.includes(letter.toLowerCase()) ? letter : '___'}
+              </div>
+            )
+          })}
+        </div>
+      )}
+      {!completed && (
+        <div ref={alphabetButtons} className="space-x-1">
+          {letters.map((letter) => {
+            return (
+              <button
+                key={letter}
+                onClick={handleClick}
+                className="border rounded-sm w-6 hover:bg-slate-600 hover:text-white disabled:opacity-50 disabled:bg-slate-800"
+              >
+                {letter}
+              </button>
+            )
+          })}
+        </div>
+      )}
       <div>{timeLeft}</div>
       <div>Tries left: {triesLeft}</div>
       {completed && success && <div>Congratulations! You won!</div>}
       {completed && !success && <div>Too bad! Next time!</div>}
       {completed && <button onClick={resetState}>Play Again</button>}
+      <div style={catStyle}></div>
     </>
   )
 }
