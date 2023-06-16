@@ -6,3 +6,18 @@ body {
   padding: 20px;
   font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+#up-arrow,#down-arrow{
+  width: 100px;
+  height: 100px;
+}
+#total-count{
+  font-weight: 900;
+  font-size: 70px;
+}
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
