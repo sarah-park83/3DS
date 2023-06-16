@@ -1,23 +1,65 @@
 body {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 20px;
-  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: white;
+  background-image: url("../public/background.jpg");
+  background-size: 1500px;
 }
-#up-arrow,#down-arrow{
-  width: 100px;
-  height: 100px;
-}
-#total-count{
-  font-weight: 900;
-  font-size: 70px;
-}
+
 .container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  font-family: Trattatello, fantasy;
+  text-align: center;
+}
+
+.header{  
+  font-family: Trattatello, fantasy;
+  text-align: center;
+  font-size: 60px;
+}
+
+.arrowbutton {
+  background-color: #0B2126;
+  border-color: white;
+  color: white;
+  padding: 20px 30px;
+  margin-left: 5px;
+}
+
+.arrowbutton:hover {
+  background-color: #266573;
+  border-color: white;
+}
+
+.letters {
+  font-family: 'Gill Sans';
+  font-size: 40px;
+}
+
+.letterbutton {
+  /* background-color: #0B2126;
+  border-color: white;
+  color: white; */
+  padding: 10px 18px;
+  margin-left: 5px;
+  font-family:'Gill Sans';
+}
+
+ .letterbutton:hover {
+  background-color: #266573;
+  border-color: white;
+}
+/* .letterbutton:active {
+  background-color: #cdd1d1;
+  border-color: white;
+} */ 
+
+.playbutton {
+  background-color: #0B2126;
+  border-color: white;
+  color: white;
+  font-size: 50px;
+  padding: 30px 40px;
+}
+
+.playbutton:hover {
+  background-color: #1C4E59;
+  border-color: white;
 }

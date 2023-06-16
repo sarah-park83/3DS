@@ -5,14 +5,13 @@ export default function Homepage() {
 
 
   return (
-    <div>
+    <div className="header">
+      <div className="header">
+        <h1>The Hangman</h1>
+      </div>
       <div>
         <DifficultyCounter />
       </div>
-      <header className="header">
-        <h1>My Collection</h1>
-      </header>
-      <section className="main">{/* add your code here */}</section>
     </div>
   )
 }

@@ -135,7 +135,7 @@ function Game() {
   return (
     <>
       {!completed && (
-        <div>
+        <div className="letters">
           {word.split('').map((letter: string, index: number) => {
             return (
               <div key={index}>
@@ -152,7 +152,7 @@ function Game() {
               <button
                 key={letter}
                 onClick={handleClick}
-                className="border rounded-sm w-6 hover:bg-slate-600 hover:text-white disabled:opacity-50 disabled:bg-slate-800"
+                className="letterbutton"
               >
                 {letter}
               </button>

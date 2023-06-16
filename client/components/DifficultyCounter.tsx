@@ -18,14 +18,15 @@ const DifficultyCounter: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <p>Difficulty Level: {count}
-      <button onClick={handleIncrement}>↑</button>
-      <button onClick={handleDecrement}>↓</button>
+      <div className="arrows">
+      <button className="arrowbutton" onClick={handleIncrement}>↑</button>
+      <button className="arrowbutton" onClick={handleDecrement}>↓</button>
+      </div>
       </p>
-      <br></br>
       <Link to={`/gamepage/${count}`}>
-      <button>Start Game</button>
+      <button className="playbutton">Start Game</button>
       </Link>
     </div>
 
