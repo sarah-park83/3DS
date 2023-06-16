@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { getWordByDifficultyLevel } from '../apis/apiClient'
 
 function Game() {
+  const { difficulty } = useParams()
+  const [word, setWord] = useState('')
   const [maxTime, setMaxTime] = useState(120)
-  let word = 'hello'
-  let tries = 3
+  let tries = 20
   const [foundLetters, setFoundLetters] = useState([] as string[])
   const [timeLeft, setTimeLeft] = useState(maxTime)
   const [completed, setCompleted] = useState(false)
@@ -13,36 +16,35 @@ function Game() {
   const alphabetButtons = useRef<HTMLDivElement>(null)
 
   const letters = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
   ]
 
   const resetState = () => {
-    word = 'hello'
     tries = 3
     setMaxTime(120)
     setFoundLetters([])
@@ -71,22 +73,30 @@ function Game() {
     setCompleted(true)
   }
 
-  function foundAllLetters() {
-    const arrayLength = [...new Set(word.split(''))].length
-    return foundLetters.length === arrayLength
+  function foundAllLetters(newArray: string[]) {
+    const array = [...new Set(word.split(''))]
+    const arrayLength = array.length
+    // console.log(arrayLength)
+    // console.log(foundLetters.length)
+    // console.log(array)
+    console.log(newArray)
+    return newArray.length === arrayLength
   }
 
   function inWord(letter: string) {
-    return word.toUpperCase().includes(letter)
+    return word.toLowerCase().includes(letter)
   }
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const button = event.target as HTMLButtonElement
     const buttonValue = button.innerHTML
-    if (!button.disabled) setTriesLeft(triesLeft - 1)
+    if (!button.disabled && !word.split('').includes(buttonValue)) {
+      setTriesLeft(triesLeft - 1)
+    }
     button.disabled = true
     if (inWord(buttonValue)) setFoundLetters([...foundLetters, buttonValue])
-    if (foundAllLetters()) setCompleted(true)
+    if (foundAllLetters([...foundLetters, buttonValue])) showEndMessage()
+    console.log('foundLetters', foundLetters)
   }
 
   useEffect(() => {
@@ -110,13 +120,22 @@ function Game() {
     }
   }, [triesLeft])
 
+  useEffect(() => {
+    async function fetchWord() {
+      const wordResponse = await getWordByDifficultyLevel(difficulty)
+      console.log(`Your word is ${wordResponse.body.word}`)
+      setWord(wordResponse.body.word)
+    }
+    fetchWord()
+  }, [])
+
   return (
     <>
       <div>
-        {word.split('').map((letter, index) => {
+        {word.split('').map((letter: string, index: number) => {
           return (
             <div key={index}>
-              {foundLetters.includes(letter.toUpperCase()) ? letter : '___'}
+              {foundLetters.includes(letter.toLowerCase()) ? letter : '___'}
             </div>
           )
         })}
