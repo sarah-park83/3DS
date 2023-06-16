@@ -6,13 +6,13 @@ import {
 
 import App from './components/App'
 import Homepage from './components/Homepage'
-// import PlayGameButton from './components/PlayGameButton'
+import Game from './components/Game' // Import the Gamepage component
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Homepage />} />
-      {/* <Route path="prop called difficulty" element={<Gamepage />} /> */}
+      <Route path="gamepage/:difficulty" element={<Game />} />
     </Route>
   )
 )
